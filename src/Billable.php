@@ -398,9 +398,9 @@ trait Billable
         $billto->setLastName($this->last_name);
         $billto->setAddress($this->address);
         $billto->setCity($this->city);
-        $billto->setState($this->state->name);
+        $billto->setState(isset($this->state) ? $this->state->name : '');
         $billto->setZip($this->zip);
-        $billto->setCountry($this->country->name);
+        $billto->setCountry(isset($this->state) ? $this->country->name : '');
 
         // Create the Customer Payment Profile object
         $paymentprofile = new AnetAPI\CustomerPaymentProfileExType();
@@ -489,9 +489,9 @@ trait Billable
         $billto->setLastName($this->last_name);
         $billto->setAddress($this->address);
         $billto->setCity($this->city);
-        $billto->setState($this->state->name);
+        $billto->setState(isset($this->state) ? $this->state->name : '');
         $billto->setZip($this->zip);
-        $billto->setCountry($this->country->name);
+        $billto->setCountry(isset($this->state) ? $this->country->name : '');
 
         $paymentprofile = new AnetAPI\CustomerPaymentProfileType();
         $paymentprofile->setCustomerType('individual');
