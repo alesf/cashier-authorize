@@ -49,6 +49,10 @@ Schema::create('subscriptions', function ($table) {
 
 #### Publish
 
+Add Service Provider to config/app.php.
+
+`Laravel\CashierAuthorizeNet\CashierServiceProvider::class`
+
 You will need to publish the assets of this package.
 
 `php artisan vendor:publish --provider="Laravel\CashierAuthorizeNet\CashierServiceProvider"`
@@ -145,4 +149,4 @@ Another limitation is time related. Due to the fact that Authorize.net uses a SO
 ## License
 
 Laravel Cashier-Authorize is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
-"# cashier-authorize" 
+"# cashier-authorize"

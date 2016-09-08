@@ -13,7 +13,7 @@ class CashierServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        require(__DIR__.'/../vendor/autoload.php');
+        // require(__DIR__.'/../vendor/autoload.php');
 
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'cashier');
 
