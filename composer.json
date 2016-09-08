@@ -33,7 +33,7 @@
         "nesbot/carbon": "~1.0",
         "symfony/http-kernel": "~2.7|~3.0",
         "authorizenet/authorizenet": "^1.9",
-        "jms/serializer": "serializer-master-dev as 1.0"
+        "jms/serializer": "xsd2php-dev as 0.18.0"
     },
     "require-dev": {
         "goetas/xsd2php": "2.0.x-dev#fdc2ab0bb3f2b3ab796ca567cf8c0f3446a7ea3a",
