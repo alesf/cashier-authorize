@@ -516,13 +516,12 @@ trait Billable
             $this->authorize_payment_id = $response->getCustomerPaymentProfileIdList()[0];
             $this->card_brand = $this->cardBrandDetector($creditCardDetails['number']);
             $this->card_last_four = substr($creditCardDetails['number'], -4);
-            $this->save();
+            return $this->save();
         } else {
             $errorMessages = $response->getMessages()->getMessage();
             Log::error("Authorize.net Response : " . $errorMessages[0]->getCode() . "  " .$errorMessages[0]->getText());
+            throw new Exception("ERROR: " . $errorMessages[0]->getCode() . "  " .$errorMessages[0]->getText(), 1);
         }
-
-        return $this;
     }
 
     /**
