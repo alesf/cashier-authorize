@@ -388,20 +388,19 @@ trait Billable
         // if you don't need to update that info
         $creditCard = new AnetAPI\CreditCardType();
         $creditCard->setCardNumber($card['number']);
-        $creditCard->setExpirationDate($card['experation']);
+        $creditCard->setExpirationDate($card['expiration']);
         $paymentCreditCard = new AnetAPI\PaymentType();
         $paymentCreditCard->setCreditCard($creditCard);
 
         // Create the Bill To info for new payment type
-        $name = explode(' ', $this->name);
         $billto = new AnetAPI\CustomerAddressType();
-        $billto->setFirstName($name[0]);
-        $billto->setLastName($name[1]);
+        $billto->setFirstName($this->first_name);
+        $billto->setLastName($this->last_name);
         $billto->setAddress($this->address);
         $billto->setCity($this->city);
-        $billto->setState($this->state);
+        $billto->setState($this->state->name);
         $billto->setZip($this->zip);
-        $billto->setCountry($this->country);
+        $billto->setCountry($this->country->name);
 
         // Create the Customer Payment Profile object
         $paymentprofile = new AnetAPI\CustomerPaymentProfileExType();
@@ -481,20 +480,18 @@ trait Billable
     {
         $creditCard = new AnetAPI\CreditCardType();
         $creditCard->setCardNumber($creditCardDetails['number']);
-        $creditCard->setExpirationDate($creditCardDetails['experation']);
+        $creditCard->setExpirationDate($creditCardDetails['expiration']);
         $paymentCreditCard = new AnetAPI\PaymentType();
         $paymentCreditCard->setCreditCard($creditCard);
 
-        $name = explode(' ', $this->name);
-
         $billto = new AnetAPI\CustomerAddressType();
-        $billto->setFirstName($name[0]);
-        $billto->setLastName($name[1]);
+        $billto->setFirstName($this->first_name);
+        $billto->setLastName($this->last_name);
         $billto->setAddress($this->address);
         $billto->setCity($this->city);
-        $billto->setState($this->state);
+        $billto->setState($this->state->name);
         $billto->setZip($this->zip);
-        $billto->setCountry($this->country);
+        $billto->setCountry($this->country->name);
 
         $paymentprofile = new AnetAPI\CustomerPaymentProfileType();
         $paymentprofile->setCustomerType('individual');
@@ -514,7 +511,7 @@ trait Billable
 
         $response = $controller->executeWithApiResponse($requestor->env);
 
-        if (($response != null) && ($response->getMessages()->getResultCode() === "Ok") ) {
+        if (($response != null) && ($response->getMessages()->getResultCode() === "Ok")) {
             $this->authorize_id = $response->getCustomerProfileId();
             $this->authorize_payment_id = $response->getCustomerPaymentProfileIdList()[0];
             $this->card_brand = $this->cardBrandDetector($creditCardDetails['number']);
@@ -542,7 +539,7 @@ trait Billable
         $controller = new AnetController\DeleteCustomerProfileController($request);
         $response = $controller->executeWithApiResponse($requestor->env);
 
-        if (($response != null) && ($response->getMessages()->getResultCode() == "Ok") ) {
+        if (($response != null) && ($response->getMessages()->getResultCode() == "Ok")) {
             return true;
         } else {
             $errorMessages = $response->getMessages()->getMessage();
