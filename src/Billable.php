@@ -521,6 +521,7 @@ trait Billable
             $errorMessages = $response->getMessages()->getMessage();
             Log::error("Authorize.net Response : " . $errorMessages[0]->getCode() . "  " .$errorMessages[0]->getText());
             throw new Exception("ERROR: " . $errorMessages[0]->getCode() . "  " .$errorMessages[0]->getText(), 1);
+            return false;
         }
     }
 
