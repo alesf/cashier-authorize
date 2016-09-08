@@ -57,18 +57,18 @@ trait Billable
 
         if ($response != null) {
             $tresponse = $response->getTransactionResponse();
-            if (($tresponse != null) && ($tresponse->getResponseCode() == '1') ) {
+            if (($tresponse != null) && ($tresponse->getResponseCode() == '1')) {
                 return [
                     'authCode' => $tresponse->getAuthCode(),
                     'transId' => $tresponse->getTransId(),
                 ];
-            } else if (($tresponse != null) && ($tresponse->getResponseCode() == "2") ) {
+            } elseif (($tresponse != null) && ($tresponse->getResponseCode() == "2")) {
                 return false;
-            } else if (($tresponse != null) && ($tresponse->getResponseCode() == "4") ) {
-                throw new Exception("ERROR: HELD FOR REVIEW", 1);
+            } elseif (($tresponse != null) && ($tresponse->getResponseCode() == "4")) {
+                throw new Exception("ERROR: HELD FOR REVIEW", 1001);
             }
         } else {
-            throw new Exception("ERROR: NO RESPONSE", 1);
+            throw new Exception("ERROR: NO RESPONSE", 1002);
         }
 
         return false;
@@ -260,7 +260,10 @@ trait Billable
             ];
         } else {
             $errorMessages = $response->getMessages()->getMessage();
-            throw new Exception("Response : " . $errorMessages[0]->getCode() . "  " .$errorMessages[0]->getText(), 1);
+            throw new Exception("Response : "
+                . $errorMessages[0]->getCode()
+                . "  "
+                . $errorMessages[0]->getText(), 1003);
         }
 
         return $invoice;
@@ -327,10 +330,13 @@ trait Billable
                 ];
             } else {
                 $errorMessages = $response->getMessages()->getMessage();
-                throw new Exception("Response : " . $errorMessages[0]->getCode() . "  " .$errorMessages[0]->getText(), 1);
+                throw new Exception("Response : "
+                    . $errorMessages[0]->getCode()
+                    . "  "
+                    . $errorMessages[0]->getText(), 1004);
             }
         } else {
-            throw new Exception("Null response error", 1);
+            throw new Exception("Null response error", 1005);
         }
 
         return $subscription;
@@ -417,7 +423,10 @@ trait Billable
             $this->card_brand = $this->cardBrandDetector($card['number']);
             $this->card_last_four = substr($card['number'], -4);
         } else {
-            throw new Exception("Response : " . $errorMessages[0]->getCode() . "  " .$errorMessages[0]->getText(), 1);
+            throw new Exception("Response : "
+                . $errorMessages[0]->getCode()
+                . "  "
+                . $errorMessages[0]->getText(), 1006);
         }
 
         return $this->save();
@@ -520,7 +529,7 @@ trait Billable
         } else {
             $errorMessages = $response->getMessages()->getMessage();
             Log::error("Authorize.net Response : " . $errorMessages[0]->getCode() . "  " .$errorMessages[0]->getText());
-            throw new Exception($errorMessages[0]->getText(), $errorMessages[0]->getCode());
+            throw new Exception($errorMessages[0]->getText(), 1007);
             return false;
         }
     }
@@ -543,7 +552,10 @@ trait Billable
             return true;
         } else {
             $errorMessages = $response->getMessages()->getMessage();
-            throw new Exception("Response : " . $errorMessages[0]->getCode() . "  " .$errorMessages[0]->getText(), 1);
+            throw new Exception("Response : "
+                . $errorMessages[0]->getCode()
+                . "  "
+                . $errorMessages[0]->getText(), 1008);
         }
 
         return false;
