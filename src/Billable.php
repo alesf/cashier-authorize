@@ -520,7 +520,7 @@ trait Billable
         } else {
             $errorMessages = $response->getMessages()->getMessage();
             Log::error("Authorize.net Response : " . $errorMessages[0]->getCode() . "  " .$errorMessages[0]->getText());
-            throw new Exception("ERROR: " . $errorMessages[0]->getCode() . "  " .$errorMessages[0]->getText(), 1);
+            throw new Exception($errorMessages[0]->getText(), $errorMessages[0]->getCode());
             return false;
         }
     }
