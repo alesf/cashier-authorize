@@ -42,6 +42,7 @@ trait Billable
         $taxAmount = round(floatval($amount) * ($this->taxPercentage()/100), 2);
 
         $order = new AnetAPI\OrderType;
+        // $order->setInvoiceNumber($options['invoice']);
         $order->setDescription($options['description']);
 
         $transactionRequestType = new AnetAPI\TransactionRequestType();
