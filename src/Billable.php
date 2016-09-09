@@ -39,14 +39,16 @@ trait Billable
         $paymentProfile->setPaymentProfileId($this->authorize_payment_id);
         $profileToCharge->setPaymentProfile($paymentProfile);
 
-        $amountWithTax = round(floatval($amount) * floatval('1.'.$this->taxPercentage()), 2);
+        $taxAmount = round(floatval($amount) * ($this->taxPercentage()/100), 2);
+
         $order = new AnetAPI\OrderType;
         $order->setDescription($options['description']);
 
         $transactionRequestType = new AnetAPI\TransactionRequestType();
         $transactionRequestType->setTransactionType("authCaptureTransaction");
-        $transactionRequestType->setAmount($amountWithTax);
+        $transactionRequestType->setAmount($amount);
         $transactionRequestType->setCurrencyCode($options['currency']);
+        $transactionRequestType->setTax($taxAmount);
         $transactionRequestType->setOrder($order);
         $transactionRequestType->setProfile($profileToCharge);
 
@@ -406,7 +408,7 @@ trait Billable
         $billto->setCity($this->city);
         $billto->setState(isset($this->state) ? $this->state->name : '');
         $billto->setZip($this->zip);
-        $billto->setCountry(isset($this->state) ? $this->country->name : '');
+        $billto->setCountry(isset($this->country) ? $this->country->name : '');
 
         // Create the Customer Payment Profile object
         $paymentprofile = new AnetAPI\CustomerPaymentProfileExType();
@@ -500,7 +502,7 @@ trait Billable
         $billto->setCity($this->city);
         $billto->setState(isset($this->state) ? $this->state->name : '');
         $billto->setZip($this->zip);
-        $billto->setCountry(isset($this->state) ? $this->country->name : '');
+        $billto->setCountry(isset($this->country) ? $this->country->name : '');
 
         $paymentprofile = new AnetAPI\CustomerPaymentProfileType();
         $paymentprofile->setCustomerType('individual');
