@@ -16,6 +16,54 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 trait Billable
 {
+    public function singleCharge($amount, $card, $options = [])
+    {
+        $options = array_merge([
+            'currency' => $this->preferredCurrency(),
+        ], $options);
+
+        $requestor = new Requestor();
+
+        $creditCard = new AnetAPI\CreditCardType();
+        $creditCard->setCardNumber($card['cc_number']);
+        $creditCard->setExpirationDate($card['cc_expiration']);
+        $creditCard->setCardCode($card['cc_security']);
+        $paymentCreditCard = new AnetAPI\PaymentType();
+        $paymentCreditCard->setCreditCard($creditCard);
+
+        $taxAmount = round(floatval($amount) * ($this->taxPercentage()/100), 2);
+
+        $transactionRequestType = new AnetAPI\TransactionRequestType();
+        $transactionRequestType->setTransactionType("authCaptureTransaction");
+        $transactionRequestType->setAmount($amount);
+        $transactionRequestType->setCurrencyCode($options['currency']);
+        $transactionRequestType->setTax($taxAmount);
+        $transactionRequestType->setPayment($paymentCreditCard);
+
+        $request = $requestor->prepare((new AnetAPI\CreateTransactionRequest()));
+        $request->setTransactionRequest($transactionRequestType);
+        $controller = new AnetController\CreateTransactionController($request);
+        $response = $controller->executeWithApiResponse($requestor->env);
+
+        if ($response != null) {
+            $tresponse = $response->getTransactionResponse();
+            if (($tresponse != null) && ($tresponse->getResponseCode() == '1')) {
+                return [
+                    'authCode' => $tresponse->getAuthCode(),
+                    'transId' => $tresponse->getTransId(),
+                ];
+            } elseif (($tresponse != null) && ($tresponse->getResponseCode() == "2")) {
+                return false;
+            } elseif (($tresponse != null) && ($tresponse->getResponseCode() == "4")) {
+                throw new Exception("ERROR: HELD FOR REVIEW", 1001);
+            }
+        } else {
+            throw new Exception("ERROR: NO RESPONSE", 1002);
+        }
+
+        return false;
+    }
+
     /**
      * Make a "one off" charge on the customer for the given amount.
      *
