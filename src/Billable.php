@@ -97,7 +97,7 @@ trait Billable
         $transactionRequestType->setTransactionType("authCaptureTransaction");
         $transactionRequestType->setAmount($amount);
         $transactionRequestType->setCurrencyCode($options['currency']);
-        $transactionRequestType->setTax($taxAmount);
+        // $transactionRequestType->setTax($taxAmount);
         $transactionRequestType->setOrder($order);
         $transactionRequestType->setProfile($profileToCharge);
 
