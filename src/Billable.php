@@ -31,13 +31,13 @@ trait Billable
         $paymentCreditCard = new AnetAPI\PaymentType();
         $paymentCreditCard->setCreditCard($creditCard);
 
-        $taxAmount = round(floatval($amount) * ($this->taxPercentage()/100), 2);
+        // $taxAmount = round(floatval($amount) * ($this->taxPercentage()/100), 2);
 
         $transactionRequestType = new AnetAPI\TransactionRequestType();
         $transactionRequestType->setTransactionType("authCaptureTransaction");
         $transactionRequestType->setAmount($amount);
         $transactionRequestType->setCurrencyCode($options['currency']);
-        $transactionRequestType->setTax($taxAmount);
+        // $transactionRequestType->setTax($taxAmount);
         $transactionRequestType->setPayment($paymentCreditCard);
 
         $request = $requestor->prepare((new AnetAPI\CreateTransactionRequest()));
@@ -53,14 +53,15 @@ trait Billable
                     'transId' => $tresponse->getTransId(),
                 ];
             } elseif (($tresponse != null) && ($tresponse->getResponseCode() == "2")) {
-                return false;
+                throw new Exception("DECLINED", 1002);
+            } elseif (($tresponse != null) && ($tresponse->getResponseCode() == "3")) {
+                throw new Exception("ERROR", 1003);
             } elseif (($tresponse != null) && ($tresponse->getResponseCode() == "4")) {
-                throw new Exception("ERROR: HELD FOR REVIEW", 1001);
+                throw new Exception("HELD FOR REVIEW", 1004);
             }
-        } else {
-            throw new Exception("ERROR: NO RESPONSE", 1002);
         }
 
+        throw new Exception("NO RESPONSE", 1000);
         return false;
     }
 
