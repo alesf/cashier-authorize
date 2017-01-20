@@ -54,10 +54,13 @@ trait Billable
                 ];
             } elseif (($tresponse != null) && ($tresponse->getResponseCode() == "2")) {
                 throw new Exception("DECLINED", 1002);
+                return false;
             } elseif (($tresponse != null) && ($tresponse->getResponseCode() == "3")) {
                 throw new Exception("ERROR", 1003);
+                return false;
             } elseif (($tresponse != null) && ($tresponse->getResponseCode() == "4")) {
                 throw new Exception("HELD FOR REVIEW", 1004);
+                return false;
             }
         }
 
