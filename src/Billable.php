@@ -31,6 +31,19 @@ trait Billable
         $paymentCreditCard = new AnetAPI\PaymentType();
         $paymentCreditCard->setCreditCard($creditCard);
 
+        $customer = new AnetAPI\CustomerDataType();
+        $customer->setId($this->id);
+        $customer->setEmail($this->email);
+
+        $billTo = new AnetAPI\CustomerAddressType();
+        $billTo->setFirstName($this->first_name);
+        $billTo->setLastName($this->last_name);
+
+        if (isset($options['order_id'])) {
+            $order = new AnetAPI\OrderType();
+            $order->setInvoiceNumber($options['order_id']);
+        }
+
         // $taxAmount = round(floatval($amount) * ($this->taxPercentage()/100), 2);
 
         $transactionRequestType = new AnetAPI\TransactionRequestType();
@@ -40,6 +53,12 @@ trait Billable
         // $transactionRequestType->setTax($taxAmount);
         $transactionRequestType->setPayment($paymentCreditCard);
 
+        $transactionRequestType->setCustomer($customer);
+        $transactionRequestType->setBillTo($billTo);
+        if (isset($options['order_id'])) {
+            $transactionRequestType->setOrder($order);
+        }
+
         $request = $requestor->prepare((new AnetAPI\CreateTransactionRequest()));
         $request->setTransactionRequest($transactionRequestType);
         $controller = new AnetController\CreateTransactionController($request);
@@ -47,6 +66,19 @@ trait Billable
 
         if ($response != null) {
             $tresponse = $response->getTransactionResponse();
+            // if ($tresponse == null) {
+            //     throw new Exception('NO RESPONSE', 1000);
+            //     return false;
+            // }
+            // if ($tresponse->getResponseCode() == '1') {
+            //     return [
+            //         'authCode' => $tresponse->getAuthCode(),
+            //         'transId' => $tresponse->getTransId(),
+            //     ];
+            // } else {
+            //     throw new Exception($tresponse->getMessage(), 2000);
+            //     return false;
+            // }
             if (($tresponse != null) && ($tresponse->getResponseCode() == '1')) {
                 return [
                     'authCode' => $tresponse->getAuthCode(),
