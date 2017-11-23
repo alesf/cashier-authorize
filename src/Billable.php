@@ -38,6 +38,7 @@ trait Billable
         $billTo = new AnetAPI\CustomerAddressType();
         $billTo->setFirstName($this->first_name);
         $billTo->setLastName($this->last_name);
+        $billTo->setEmail($this->email);
 
         if (isset($options['order_id'])) {
             $order = new AnetAPI\OrderType();
