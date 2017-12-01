@@ -39,6 +39,13 @@ trait Billable
         $billTo->setFirstName($this->first_name);
         $billTo->setLastName($this->last_name);
         $billTo->setEmail($this->email);
+        $billTo->setAddress(substr($this->address, 0, 59));
+        $billTo->setCity(substr($this->city, 0, 39));
+        $billTo->setState($this->stateCode);
+        $billTo->setCountry($this->countryName);
+        $billTo->setZip($this->zip);
+        $billTo->setPhoneNumber(preg_replace('/[^0-9]/', '', $this->phone));
+        $billTo->setFaxNumber(preg_replace('/[^0-9]/', '', $this->fax));
 
         if (isset($options['order_id'])) {
             $order = new AnetAPI\OrderType();
@@ -67,37 +74,27 @@ trait Billable
 
         if ($response != null) {
             $tresponse = $response->getTransactionResponse();
-            // if ($tresponse == null) {
-            //     throw new Exception('NO RESPONSE', 1000);
-            //     return false;
-            // }
-            // if ($tresponse->getResponseCode() == '1') {
-            //     return [
-            //         'authCode' => $tresponse->getAuthCode(),
-            //         'transId' => $tresponse->getTransId(),
-            //     ];
-            // } else {
-            //     throw new Exception($tresponse->getMessage(), 2000);
-            //     return false;
-            // }
-            if (($tresponse != null) && ($tresponse->getResponseCode() == '1')) {
+            if ($tresponse == null) {
+                throw new Exception('NO RESPONSE', -1);
+                return false;
+            }
+            if ($tresponse->getResponseCode() == '1') {
                 return [
                     'authCode' => $tresponse->getAuthCode(),
                     'transId' => $tresponse->getTransId(),
                 ];
-            } elseif (($tresponse != null) && ($tresponse->getResponseCode() == "2")) {
-                throw new Exception("DECLINED", 1002);
-                return false;
-            } elseif (($tresponse != null) && ($tresponse->getResponseCode() == "3")) {
-                throw new Exception("ERROR", 1003);
-                return false;
-            } elseif (($tresponse != null) && ($tresponse->getResponseCode() == "4")) {
-                throw new Exception("HELD FOR REVIEW", 1004);
+            } else {
+                $message = 'Something went wrong. Please contact us or try again.';
+                $errors = $tresponse->getErrors();
+                if (isset($errors[0])) {
+                    $message = $errors[0]->getErrorText();
+                }
+                throw new Exception($message, $tresponse->getResponseCode());
                 return false;
             }
         }
 
-        throw new Exception("NO RESPONSE", 1000);
+        throw new Exception("NO RESPONSE", -1);
         return false;
     }
 
