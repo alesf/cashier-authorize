@@ -47,6 +47,37 @@ trait Billable
         $billTo->setPhoneNumber(preg_replace('/[^0-9]/', '', $this->phone));
         $billTo->setFaxNumber(preg_replace('/[^0-9]/', '', $this->fax));
 
+        // if ($this->first_name) {
+        //     $billTo->setFirstName($this->first_name);
+        // }
+        // if ($this->last_name) {
+        //     $billTo->setLastName($this->last_name);
+        // }
+        // if ($this->email) {
+        //     $billTo->setEmail($this->email);
+        // }
+        // if ($this->address) {
+        //     $billTo->setAddress(substr($this->address, 0, 59));
+        // }
+        // if ($this->city) {
+        //     $billTo->setCity(substr($this->city, 0, 39));
+        // }
+        // if ($this->stateCode) {
+        //     $billTo->setState($this->stateCode);
+        // }
+        // if ($this->countryName) {
+        //     $billTo->setCountry($this->countryName);
+        // }
+        // if ($this->zip) {
+        //     $billTo->setZip($this->zip);
+        // }
+        // if ($this->phone) {
+        //     $billTo->setPhoneNumber(preg_replace('/[^0-9]/', '', $this->phone));
+        // }
+        // if ($this->fax) {
+        //     $billTo->setFaxNumber(preg_replace('/[^0-9]/', '', $this->fax));
+        // }
+
         if (isset($options['order_id'])) {
             $order = new AnetAPI\OrderType();
             $order->setInvoiceNumber($options['order_id']);
@@ -78,7 +109,7 @@ trait Billable
                 throw new Exception('NO RESPONSE', -1);
                 return false;
             }
-            if ($tresponse->getResponseCode() == '1') {
+            if ($tresponse->getResponseCode() == '1' || $tresponse->getResponseCode() == '4') {
                 return [
                     'authCode' => $tresponse->getAuthCode(),
                     'transId' => $tresponse->getTransId(),

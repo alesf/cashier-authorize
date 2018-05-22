@@ -35,7 +35,7 @@
         "jms/serializer": "serializer-master-dev as 1.0"
     },
     "require-dev": {
-        "goetas/xsd2php": "2.0.x-dev#fdc2ab0bb3f2b3ab796ca567cf8c0f3446a7ea3a",
+        "goetas/xsd2php": "^2.1",
         "goetas/xsd-reader": "2.*@dev",
         "illuminate/routing": "~5.1",
         "illuminate/http": "~5.1",
