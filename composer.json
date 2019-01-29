@@ -31,7 +31,7 @@
         "dompdf/dompdf": "^0.8",
         "nesbot/carbon": "~1.0",
         "symfony/http-kernel": "~2.7|~3.0",
-        "authorizenet/authorizenet": "^1.9",
+        "authorizenet/authorizenet": "^1.9.7",
         "jms/serializer": "serializer-master-dev as 1.0"
     },
     "require-dev": {
