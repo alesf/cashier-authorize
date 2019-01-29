@@ -25,7 +25,7 @@
         "dompdf/dompdf": "^0.8",
         "nesbot/carbon": "~1.0",
         "symfony/http-kernel": "~2.7|~3.0",
-        "authorizenet/authorizenet": "1.9.7",
+        "authorizenet/authorizenet": "^2",
         "jms/serializer": "^1.2",
         "goetas-webservices/xsd2php-runtime":"^0.2.2"
     },
